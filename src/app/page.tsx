@@ -1,6 +1,8 @@
 // src/app/page.tsx
 'use client'
 
+export const dynamic = 'force-dynamic'
+
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { ShirtIcon, Package, BarChart3, Users, Loader2, Eye, EyeOff, ChevronRight, CheckCircle2 } from 'lucide-react'
