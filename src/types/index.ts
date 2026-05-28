@@ -24,6 +24,7 @@ export interface Articulo {
   genero: Genero
   sku: string
   precio_venta: number
+  precio_compra?: number
   activo: boolean
   created_at: string
   updated_at: string
@@ -211,6 +212,20 @@ export interface EntradaMercanciaForm {
   cantidad: number
   precio_costo: number
   fecha_ingreso: string
+}
+
+export interface EntradaMercanciaMasivaForm {
+  nombre: string
+  modelo: string
+  genero: Genero
+  precio_venta: number
+  precio_costo: number
+  fecha_ingreso: string
+  variaciones: {
+    color: string
+    talla: string
+    cantidad: number
+  }[]
 }
 
 export interface PagoForm {

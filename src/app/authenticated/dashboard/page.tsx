@@ -104,7 +104,7 @@ const DashboardAdmin = () => {
           icon={<Package size={16} />}
           label="Artículos activos"
           value={totalArticulos}
-          sublabel="en catálogo"
+          sublabel="en inventario"
           highlight
         />
         <KpiCard
@@ -142,11 +142,10 @@ const DashboardAdmin = () => {
             <table className="w-full text-[13px] min-w-[450px]">
               <thead>
                 <tr className="bg-gray-50">
-                  {['Artículo', 'Talla', 'Stock', 'Precio'].map(h => (
-                    <th key={h} className="text-left px-4 py-2.5 text-[11px] font-medium text-gray-400 uppercase tracking-wide">
-                      {h}
-                    </th>
-                  ))}
+                  <th className="text-left px-3 py-2.5 text-[11px] font-medium text-gray-400 uppercase tracking-wide">Artículo / Modelo</th>
+                  <th className="text-left px-3 py-2.5 text-[11px] font-medium text-gray-400 uppercase tracking-wide">Talla / Color</th>
+                  <th className="text-right px-3 py-2.5 text-[11px] font-medium text-gray-400 uppercase tracking-wide">Stock</th>
+                  <th className="text-right px-3 py-2.5 text-[11px] font-medium text-gray-400 uppercase tracking-wide">Precio</th>
                 </tr>
               </thead>
               <tbody>
@@ -159,17 +158,30 @@ const DashboardAdmin = () => {
                   .map(a => {
                     const piezas = stock.find(i => i.articulo_id === a.id)?.cantidad_disponible ?? 0
                     return (
-                      <tr key={a.id} className="border-t border-gray-50 hover:bg-gray-50">
-                        <td className="px-4 py-2.5 font-medium text-gray-800 truncate max-w-[180px]">{a.nombre}</td>
-                        <td className="px-4 py-2.5 text-gray-500">{a.talla}</td>
-                        <td className="px-4 py-2.5">
+                      <tr key={a.id} className="border-t border-gray-50 hover:bg-gray-50/70">
+                        <td className="px-3 py-2.5">
+                          <p className="text-gray-800 font-medium leading-tight truncate max-w-[160px]">{a.nombre}</p>
+                          <p className="text-[11px] text-gray-400 mt-0.5">{a.modelo}</p>
+                        </td>
+                        <td className="px-3 py-2.5">
+                          <span className="inline-flex items-center gap-1">
+                            <span className="text-gray-700 font-medium">{a.talla}</span>
+                            {a.color && (
+                              <>
+                                <span className="text-gray-300">·</span>
+                                <span className="text-gray-500">{a.color}</span>
+                              </>
+                            )}
+                          </span>
+                        </td>
+                        <td className="px-3 py-2.5 text-right">
                           <span className={`px-2 py-0.5 rounded-full text-[11px] font-medium ${
                             piezas === 0 ? 'bg-red-50 text-red-700' : 'bg-amber-50 text-amber-700'
                           }`}>
                             {piezas === 0 ? 'Agotado' : `${piezas} pza${piezas !== 1 ? 's' : ''}`}
                           </span>
                         </td>
-                        <td className="px-4 py-2.5 text-gray-700">{formatCurrency(a.precio_venta)}</td>
+                        <td className="px-3 py-2.5 text-right text-gray-700">{formatCurrency(a.precio_venta)}</td>
                       </tr>
                     )
                   })}
@@ -192,7 +204,7 @@ const DashboardAdmin = () => {
         <div className="flex flex-col gap-3">
           <p className="text-[12px] font-medium text-gray-500 uppercase tracking-wide">Acciones rápidas</p>
           <QuickAction href="/authenticated/almacen/entrada"   icon={<Plus size={15} />}    label="Registrar entrada"  desc="Agregar nuevo artículo y lote" />
-          <QuickAction href="/authenticated/almacen/articulos" icon={<ClipboardList size={15} />} label="Ver catálogo"  desc="Artículos y precios" />
+          <QuickAction href="/authenticated/almacen/articulos" icon={<ClipboardList size={15} />} label="Ver inventario"  desc="Artículos y precios" />
           <QuickAction href="/authenticated/admin/corte-general" icon={<BarChart3 size={15} />}  label="Corte general" desc="Consolidar ventas del día" />
         </div>
       </div>
@@ -214,11 +226,11 @@ const DashboardAlmacenista = () => {
     <div className="space-y-6">
       <div>
         <h1 className="text-[20px] font-semibold text-gray-900">Control de Inventario</h1>
-        <p className="text-[13px] text-gray-400 mt-0.5">Estado actual de almacén y catálogo</p>
+        <p className="text-[13px] text-gray-400 mt-0.5">Estado actual del almacén e inventario</p>
       </div>
 
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-3">
-        <KpiCard icon={<Package size={16} />}       label="Artículos" value={totalArticulos}              sublabel="en catálogo" highlight />
+        <KpiCard icon={<Package size={16} />}       label="Artículos" value={totalArticulos}              sublabel="en inventario" highlight />
         <KpiCard icon={<ShirtIcon size={16} />}     label="Piezas disponibles" value={totalPiezas}        sublabel="en bodega" />
         <KpiCard icon={<TrendingUp size={16} />}    label="Total vendidas" value={totalVendidas}           sublabel="piezas despachadas" />
         <KpiCard icon={<AlertTriangle size={16} />} label="Alertas de stock" value={stockBajo + sinStock}  sublabel={`${sinStock} agotados`} warning={stockBajo + sinStock > 0} />
@@ -227,7 +239,7 @@ const DashboardAlmacenista = () => {
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
         <div className="xl:col-span-2 bg-white border border-gray-100 rounded-xl overflow-hidden">
           <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
-            <span className="text-[13px] font-medium text-gray-900">Últimas entradas al catálogo</span>
+            <span className="text-[13px] font-medium text-gray-900">Últimas entradas al inventario</span>
             <Link href="/authenticated/almacen/articulos" className="text-[12px] text-brand-600 hover:text-brand-800 flex items-center gap-1">
               Ver todos <ArrowRight size={12} />
             </Link>
@@ -279,7 +291,7 @@ const DashboardAlmacenista = () => {
         <div className="flex flex-col gap-3">
           <p className="text-[12px] font-medium text-gray-500 uppercase tracking-wide">Acciones rápidas</p>
           <QuickAction href="/authenticated/almacen/entrada"   icon={<Plus size={15} />}         label="Nueva entrada"    desc="Registrar artículo y lote" />
-          <QuickAction href="/authenticated/almacen/articulos" icon={<ClipboardList size={15} />} label="Ver catálogo"     desc="Artículos activos" />
+          <QuickAction href="/authenticated/almacen/articulos" icon={<ClipboardList size={15} />} label="Ver inventario"     desc="Artículos activos" />
         </div>
       </div>
     </div>

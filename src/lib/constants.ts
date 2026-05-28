@@ -24,7 +24,7 @@ export const ROLES = {
 export const NAV_ITEMS = {
   almacenista: [
     { label: 'Dashboard',         href: '/authenticated/dashboard',           icon: 'home' },
-    { label: 'Catálogo',          href: '/authenticated/almacen/articulos',   icon: 'list' },
+    { label: 'Inventario',        href: '/authenticated/almacen/articulos',   icon: 'list' },
     { label: 'Entrada mercancía', href: '/authenticated/almacen/entrada',     icon: 'package' },
   ],
   vendedor: [
@@ -42,7 +42,7 @@ export const NAV_ITEMS = {
   admin: [
     { label: 'Dashboard',         href: '/authenticated/dashboard',              icon: 'home' },
     { label: 'Corte general',     href: '/authenticated/admin/corte-general',    icon: 'building-bank' },
-    { label: 'Catálogo',          href: '/authenticated/almacen/articulos',      icon: 'list' },
+    { label: 'Inventario',        href: '/authenticated/almacen/articulos',      icon: 'list' },
     { label: 'Entrada mercancía', href: '/authenticated/almacen/entrada',        icon: 'package' },
   ],
 } as const

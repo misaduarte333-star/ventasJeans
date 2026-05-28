@@ -3,7 +3,7 @@
 
 import useSWR from 'swr'
 import { inventarioService } from '@/services/inventario'
-import type { EntradaMercanciaForm } from '@/types'
+import type { EntradaMercanciaForm, EntradaMercanciaMasivaForm } from '@/types'
 
 export const useInventario = () => {
   const { data: articulos, mutate: mutateArticulos, isLoading: loadingArticulos } = useSWR(
@@ -23,6 +23,13 @@ export const useInventario = () => {
     return result
   }
 
+  const registrarEntradaMasiva = async (form: EntradaMercanciaMasivaForm) => {
+    const result = await inventarioService.registrarEntradasMasivas(form)
+    await mutateArticulos()
+    await mutateStock()
+    return result
+  }
+
   const buscarPorSku = async (sku: string) => {
     return inventarioService.buscarPorSku(sku)
   }
@@ -35,7 +42,7 @@ export const useInventario = () => {
 
   const actualizarArticulo = async (
     id: string,
-    updates: Partial<Pick<import('@/types').Articulo, 'nombre' | 'modelo' | 'talla' | 'color' | 'genero' | 'precio_venta'>>
+    updates: Partial<Pick<import('@/types').Articulo, 'nombre' | 'modelo' | 'talla' | 'color' | 'genero' | 'precio_venta' | 'precio_compra'>>
   ) => {
     await inventarioService.actualizarArticulo(id, updates)
     await mutateArticulos()
@@ -48,6 +55,7 @@ export const useInventario = () => {
     loadingArticulos,
     loadingStock,
     registrarEntrada,
+    registrarEntradaMasiva,
     buscarPorSku,
     desactivarArticulo,
     actualizarArticulo,

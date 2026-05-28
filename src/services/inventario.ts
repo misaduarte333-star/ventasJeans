@@ -1,6 +1,6 @@
 // src/services/inventario.ts
 import { supabase } from './supabase'
-import type { Articulo, LoteInventario, EntradaMercanciaForm } from '@/types'
+import type { Articulo, LoteInventario, EntradaMercanciaForm, EntradaMercanciaMasivaForm } from '@/types'
 
 export const inventarioService = {
 
@@ -44,7 +44,7 @@ export const inventarioService = {
 
   async actualizarArticulo(
     id: string,
-    updates: Partial<Pick<Articulo, 'nombre' | 'modelo' | 'talla' | 'color' | 'genero' | 'precio_venta'>>
+    updates: Partial<Pick<Articulo, 'nombre' | 'modelo' | 'talla' | 'color' | 'genero' | 'precio_venta' | 'precio_compra'>>
   ): Promise<void> {
     const { error } = await supabase
       .from('articulos')
@@ -77,6 +77,7 @@ export const inventarioService = {
         genero:       form.genero,
         sku,
         precio_venta: form.precio_venta,
+        precio_compra: form.precio_costo,
         activo:       true,
       }])
       .select()
@@ -110,6 +111,22 @@ export const inventarioService = {
     if (errInv) throw errInv
 
     return { articulo, lote }
+  },
+
+  async registrarEntradasMasivas(form: EntradaMercanciaMasivaForm): Promise<void> {
+    for (const varItem of form.variaciones) {
+      await this.registrarEntrada({
+        nombre:        form.nombre,
+        modelo:        form.modelo,
+        talla:         varItem.talla,
+        genero:        form.genero,
+        color:         varItem.color,
+        precio_venta:  form.precio_venta,
+        cantidad:      varItem.cantidad,
+        precio_costo:  form.precio_costo,
+        fecha_ingreso: form.fecha_ingreso,
+      })
+    }
   },
 
   // ─── Stock ────────────────────────────────────────────────────

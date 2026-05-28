@@ -43,7 +43,24 @@ export const loginSchema = z.object({
   password: z.string().min(6, 'Mínimo 6 caracteres'),
 })
 
+export const entradaMercanciaMasivaSchema = z.object({
+  nombre:        z.string().min(2, 'Nombre requerido'),
+  modelo:        z.string().min(1, 'Modelo requerido'),
+  genero:        z.enum(['Hombre', 'Mujer']),
+  precio_venta:  z.number().positive('El precio debe ser mayor a 0'),
+  precio_costo:  z.number().positive('El costo debe ser mayor a 0'),
+  fecha_ingreso: z.string().min(1, 'Fecha requerida'),
+  variaciones:   z.array(
+    z.object({
+      color:    z.string().min(1, 'Color requerido'),
+      talla:    z.string().min(1, 'Talla requerida'),
+      cantidad: z.number().int().positive('La cantidad debe ser mayor a 0'),
+    })
+  ).min(1, 'Debes agregar al menos una variación'),
+})
+
 export type EntradaMercanciaForm = z.infer<typeof entradaMercanciaSchema>
+export type EntradaMercanciaMasivaForm = z.infer<typeof entradaMercanciaMasivaSchema>
 export type NuevaOrdenForm       = z.infer<typeof nuevaOrdenSchema>
 export type GastoForm            = z.infer<typeof gastoSchema>
 export type LoginForm            = z.infer<typeof loginSchema>
