@@ -6,15 +6,40 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { entradaMercanciaSchema, type EntradaMercanciaForm as FormValues } from '@/lib/validations'
 import { useInventario } from '@/hooks/useInventario'
-import { TALLAS, GENEROS } from '@/lib/constants'
+import { GENEROS } from '@/lib/constants'
 import { formatCurrency } from '@/lib/formatting'
 import { today } from '@/lib/formatting'
 import { cn } from '@/lib/utils'
 
+const PREDEFINED_TALLAS = Array.from(
+  new Set([
+    'XS', 'S', 'M', 'L', 'XL', 'XXL',
+    ...Array.from({ length: 49 }, (_, i) => i.toString()),
+  ])
+)
+
+function sortTallas(tallas: string[]): string[] {
+  const lettersOrder = ['XS', 'S', 'M', 'L', 'XL', 'XXL']
+  const isNumber = (val: string) => !isNaN(Number(val))
+
+  const letterTallas = tallas.filter(t => lettersOrder.includes(t.toUpperCase()))
+  const numericTallas = tallas.filter(t => isNumber(t))
+  const otherTallas = tallas.filter(t => !lettersOrder.includes(t.toUpperCase()) && !isNumber(t))
+
+  letterTallas.sort((a, b) => lettersOrder.indexOf(a.toUpperCase()) - lettersOrder.indexOf(b.toUpperCase()))
+  numericTallas.sort((a, b) => Number(a) - Number(b))
+  otherTallas.sort()
+
+  return [...letterTallas, ...numericTallas, ...otherTallas]
+}
+
 export const EntradaMercanciaForm = () => {
-  const { registrarEntrada } = useInventario()
+  const { registrarEntrada, articulos } = useInventario()
   const [guardando, setGuardando] = useState(false)
   const [exito, setExito] = useState(false)
+
+  const dbTallas = Array.from(new Set(articulos.map(a => a.talla).filter(Boolean)))
+  const allTallas = sortTallas(Array.from(new Set([...PREDEFINED_TALLAS, ...dbTallas])))
 
   const {
     register,
@@ -87,9 +112,16 @@ export const EntradaMercanciaForm = () => {
 
             <div className="grid grid-cols-2 gap-3">
               <Field label="Talla" error={errors.talla?.message}>
-                <select {...register('talla')} className={inputCls(!!errors.talla)}>
-                  {TALLAS.map(t => <option key={t}>{t}</option>)}
-                </select>
+                <input
+                  {...register('talla')}
+                  list="tallas-list"
+                  placeholder="Selecciona o escribe..."
+                  className={inputCls(!!errors.talla)}
+                  autoComplete="off"
+                />
+                <datalist id="tallas-list">
+                  {allTallas.map(t => <option key={t} value={t} />)}
+                </datalist>
               </Field>
               <Field label="Género" error={errors.genero?.message}>
                 <select {...register('genero')} className={inputCls(!!errors.genero)}>
