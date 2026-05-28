@@ -31,12 +31,12 @@ export const NAV_ITEMS = {
     { label: 'Dashboard',         href: '/authenticated/dashboard',              icon: 'home' },
     { label: 'Órdenes del día',   href: '/authenticated/vendedor/ordenes',       icon: 'shopping-cart' },
     { label: 'Nueva orden',       href: '/authenticated/vendedor/ordenes/nueva', icon: 'plus' },
-    { label: 'Gastos',            href: '/authenticated/vendedor/gastos',        icon: 'receipt' },
     { label: 'Mi corte',          href: '/authenticated/vendedor/corte',         icon: 'report' },
   ],
   repartidor: [
     { label: 'Dashboard',         href: '/authenticated/dashboard',              icon: 'home' },
     { label: 'Órdenes del día',   href: '/authenticated/repartidor/ordenes',     icon: 'shopping-cart' },
+    { label: 'Gastos',            href: '/authenticated/repartidor/gastos',      icon: 'receipt' },
     { label: 'Inventario',        href: '/authenticated/repartidor/inventario',  icon: 'package' },
   ],
   admin: [

@@ -7,7 +7,7 @@ import { useGastos } from '@/hooks/useGastos'
 import { formatCurrency, formatDate } from '@/lib/formatting'
 import { cn } from '@/lib/utils'
 
-export default function GastosVendedorPage() {
+export default function GastosRepartidorPage() {
   const { gastos, isLoading, registrarGasto, eliminarGasto, totalGastos } = useGastos()
 
   // Form States

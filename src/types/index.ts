@@ -113,10 +113,10 @@ export interface Pago {
   created_by?: string
 }
 
-// ─── Gasto de vendedor ────────────────────────────────────────
-export interface GastoVendedor {
+// ─── Gasto de repartidor ────────────────────────────────────────
+export interface GastoRepartidor {
   id: string
-  vendedor_id: string
+  repartidor_id: string
   tipo: string
   monto: number
   descripcion?: string

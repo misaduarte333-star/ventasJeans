@@ -1,15 +1,15 @@
 // src/services/gastos.ts
 import { supabase } from './supabase'
-import type { GastoVendedor } from '@/types'
+import type { GastoRepartidor } from '@/types'
 
 export const gastosService = {
 
-  async listarGastosHoy(vendedor_id: string): Promise<GastoVendedor[]> {
+  async listarGastosHoy(repartidor_id: string): Promise<GastoRepartidor[]> {
     const hoy = new Date().toISOString().split('T')[0]
     const { data, error } = await supabase
-      .from('gastos_vendedor')
+      .from('gastos_repartidor')
       .select('*')
-      .eq('vendedor_id', vendedor_id)
+      .eq('repartidor_id', repartidor_id)
       .eq('fecha', hoy)
       .order('created_at', { ascending: false })
     if (error) throw error
@@ -17,15 +17,15 @@ export const gastosService = {
   },
 
   async registrarGasto(
-    vendedor_id: string,
+    repartidor_id: string,
     tipo: string,
     monto: number,
     descripcion: string
-  ): Promise<GastoVendedor> {
+  ): Promise<GastoRepartidor> {
     const fecha = new Date().toISOString().split('T')[0]
     const { data, error } = await supabase
-      .from('gastos_vendedor')
-      .insert([{ vendedor_id, tipo, monto, descripcion, fecha }])
+      .from('gastos_repartidor')
+      .insert([{ repartidor_id, tipo, monto, descripcion, fecha }])
       .select()
       .single()
     if (error) throw error
@@ -34,7 +34,7 @@ export const gastosService = {
 
   async eliminarGasto(id: string): Promise<void> {
     const { error } = await supabase
-      .from('gastos_vendedor')
+      .from('gastos_repartidor')
       .delete()
       .eq('id', id)
     if (error) throw error
