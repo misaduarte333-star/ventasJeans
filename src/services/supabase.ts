@@ -1,7 +1,6 @@
 // src/services/supabase.ts
-import { createClient } from '@supabase/supabase-js'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-
-export const supabase = createClient(supabaseUrl, supabaseKey)
+// Usar auth-helpers para manejar la sesión correctamente con cookies
+// Esto evita errores 403 por tokens expirados y limpia la sesión al hacer signOut
+export const supabase = createClientComponentClient()

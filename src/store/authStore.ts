@@ -27,8 +27,22 @@ export const useAuthStore = create<AuthState>()(
       setLoading:   (loading) => set({ loading }),
 
       logout: async () => {
-        await supabase.auth.signOut()
+        // Limpiar estado local primero
         set({ user: null, rolActivo: null })
+        // Limpiar zustand persist del localStorage
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('auth-store')
+        }
+        // Cerrar sesión en Supabase (ignorar error 403 si el token ya expiró)
+        try {
+          await supabase.auth.signOut()
+        } catch (_err) {
+          // Si falla, igual procedemos con la redirección
+        }
+        // Forzar recarga completa para limpiar cualquier estado en memoria
+        if (typeof window !== 'undefined') {
+          window.location.href = '/'
+        }
       },
     }),
     {
