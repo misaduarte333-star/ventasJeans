@@ -4,7 +4,7 @@ export const dynamic = 'force-dynamic'
 
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Menu, ShirtIcon } from 'lucide-react'
+import { Menu, ShirtIcon, LogOut } from 'lucide-react'
 import { Sidebar } from '@/components/shared/Sidebar'
 import { useAuth } from '@/hooks/useAuth'
 import { useUiStore } from '@/store/uiStore'
@@ -12,7 +12,7 @@ import { ROLES } from '@/lib/constants'
 import type { Rol } from '@/types'
 
 export default function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
-  const { user, loading, rolActivo } = useAuth()
+  const { user, loading, rolActivo, logout } = useAuth()
   const router = useRouter()
   const { setSidebarOpen, toggleSidebar } = useUiStore()
 
@@ -73,6 +73,14 @@ export default function AuthenticatedLayout({ children }: { children: React.Reac
               {ROLES[rolActivo as Rol] ?? rolActivo}
             </span>
           )}
+          <button
+            onClick={() => logout()}
+            className="p-1.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 focus:outline-none transition-colors"
+            title="Cerrar sesión"
+            aria-label="Cerrar sesión"
+          >
+            <LogOut size={18} />
+          </button>
         </div>
       </header>
 
